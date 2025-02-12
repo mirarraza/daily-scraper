@@ -34,5 +34,5 @@ jobs:
           git config --global user.name "mirarraza"
           git add valores_cuota.csv
           git commit -m "Actualización diaria de valores" || echo "No hay cambios para commit"
-          git remote set-url origin https://$PAT_TOKEN@github.com/mirarraza/daily-scraper.git
+          git remote set-url origin "https://$PAT_TOKEN@github.com/mirarraza/daily-scraper.git"
           git push origin HEAD:refs/heads/main || echo "Push falló, revisa la configuración"
