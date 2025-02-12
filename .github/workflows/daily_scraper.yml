@@ -2,7 +2,7 @@ name: Daily Scraper
 
 on:
   schedule:
-    - cron: "0 9 * * *"   # Esto se ejecuta todos los días a las 9:00 AM UTC; ajusta según tus necesidades
+    - cron: "30 11 * * *"   # Se ejecuta todos los días a las 11:30 AM UTC
   workflow_dispatch:       # Permite ejecutar manualmente el workflow
 
 jobs:
@@ -26,11 +26,13 @@ jobs:
         run: |
           python scraper.py
 
-      # Opcional: Si deseas hacer commit del CSV actualizado al repositorio
       - name: Commit and push CSV
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          git config --local user.email "mirarraza@gmail.com"
-          git config --local user.name "mirarraza"
+          git config --global user.email "mirarraza@gmail.com"
+          git config --global user.name "mirarraza"
           git add valores_cuota.csv
-          git commit -m "Actualización diaria de valores" || echo "No hay cambios"
-          git push
+          git commit -m "Actualización diaria de valores" || echo "No hay cambios para commit"
+          git remote set-url origin https://$PAT_TOKEN@github.com/mirarraza/daily-scraper.git
+          git push origin HEAD:refs/heads/main || echo "Push falló, revisa la configuración"
