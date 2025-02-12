@@ -1,0 +1,36 @@
+name: Daily Scraper
+
+on:
+  schedule:
+    - cron: "0 9 * * *"   # Esto se ejecuta todos los días a las 9:00 AM UTC; ajusta según tus necesidades
+  workflow_dispatch:       # Permite ejecutar manualmente el workflow
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 pandas
+
+      - name: Run scraper
+        run: |
+          python scraper.py
+
+      # Opcional: Si deseas hacer commit del CSV actualizado al repositorio
+      - name: Commit and push CSV
+        run: |
+          git config --local user.email "mirarraza@gmail.com"
+          git config --local user.name "mirarraza"
+          git add valores_cuota.csv
+          git commit -m "Actualización diaria de valores" || echo "No hay cambios"
+          git push
